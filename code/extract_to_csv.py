@@ -8,7 +8,7 @@ outfile = open(sys.argv[2], "w")
 #dep = "input/raw/depressed"
 #control = "anonymized_control_tweets"
 #dep = "anonymized_depression_tweets"
-label_file = open("input/raw/control_depression/controldepression.users.train")
+label_file = open("../input/raw/control_depression/controldepression.users.train.lbl")
 labels = {}
 for line in label_file:
     vals = line.split("\t")

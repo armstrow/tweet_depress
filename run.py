@@ -1,6 +1,6 @@
 import sys, os
 sys.path.append("./code/")
-from status_reader import get_statuses
+#from status_reader import get_statuses
 import argparse
 
 parser = argparse.ArgumentParser(description="Run Topic Model test")
@@ -27,10 +27,11 @@ parser.add_argument('--bi', default='100', help="number of burn-in iterations")
 parser.add_argument('--u', help="limit unigrams", action='store_const', const=50, default=1)
 parser.add_argument('--V', help="limit vocab to 10000", action='store_true')
 parser.add_argument('-vocab', default="")
+parser.add_argument('-neuro', default="input/raw/neuro")
 args = parser.parse_args()
 
 
-MALLET="/home/will/Research/CLPsych/external/mallet-2.0.7/bin/mallet"
+#MALLET="/home/will/Research/CLPsych/external/mallet-2.0.7/bin/mallet"
 #MALLET=external/Mallet/bin/mallet
 BASENAME1=args.pos_file
 BASENAME2=args.neg_file
@@ -40,15 +41,15 @@ BASENAME=BASENAME1+"_x_"+BASENAME2
 NUM_TOPS=args.k
 SEED=0
 
-JAVA = "java -Xmx10000M -cp 'segan/dist/segan.jar:segan/lib/*'"
-BASEDIR="/home/will/Final"
-
+JAVA = "java -Xmx10000M -cp 'dist/segan.jar:lib/*'"
+BASEDIR=".."
+os.chdir("segan")
 import datetime
 cur_time = datetime.datetime.now()
 if args.model_dir == "":
-        out_dir = "output/exp/" + TAG_O + "_" + datetime.datetime.isoformat(cur_time)
+        out_dir = BASEDIR + "/output/exp/" + TAG_O + "_" + datetime.datetime.isoformat(cur_time)
 else:
-        out_dir = args.model_dir
+        out_dir = BASEDIR + "/" +  args.model_dir
 if not os.path.exists(out_dir):
         os.system("mkdir "+out_dir)
 
@@ -68,8 +69,8 @@ if args.ne_pp:
         cmd = [JAVA,
                class_to_run,
                "--dataset " + dataset,
-               "--data-folder segan/" + folder, 
-               "--text-data "+BASEDIR+"/input/raw/neuro",
+               "--data-folder " + BASEDIR+"/segan/" + folder, 
+               "--text-data "+BASEDIR+"/" + args.neuro,
                "--format-folder " + ne_in_folder,
                "--run-mode process",
                "-v -d -s -sent",
@@ -83,7 +84,7 @@ if args.ne_pp:
         if args.ne == "slda" or args.ne=="snlda":
                 cmd.append("--response-file " + BASEDIR + "/input/raw/neuro_response_file.txt")
         if args.prior:
-                cmd.append("--word-voc-file /home/will/Final/combined_vocab.txt")
+                cmd.append("--word-voc-file "+BASEDIR+"/combined_vocab.txt")
         if args.V:
                 cmd.append("--V 10000")
         log_file.write(" ".join(cmd) + "\n\n")
@@ -109,7 +110,7 @@ args_map["bsnlda"] = args_map["snlda"] + ["-binary"]
 if args.ne_run:
 	print "==>Training lda on neuroticism data"
         class_to_run = class_map[args.ne]
-        file_prefix = "segan/"+folder+"/"+dataset+"/"+ne_in_folder+"/"+dataset
+        file_prefix = BASEDIR + "/segan/"+folder+"/"+dataset+"/"+ne_in_folder+"/"+dataset
 	cmd = [JAVA,
                class_to_run,
                "--dataset " + dataset,
@@ -127,14 +128,14 @@ if args.ne_run:
         os.system(" ".join(cmd))
         
 
-if not os.path.exists("input/" + TAG_I):
-	os.system("mkdir input/" + TAG_I)
+#if not os.path.exists(BASEDIR + "/input/" + TAG_I):
+#	os.system("mkdir input/" + TAG_I)
 
-if not os.path.exists("input/"+TAG_I+"/"+BASENAME+"_text.csv"):
-	print "==>Processing Raw Data"
-	os.system("mkdir input/"+TAG_I+"/"+BASENAME)
-	get_statuses("input/raw/"+BASENAME1, "input/"+TAG_I+"/"+BASENAME, 1, "input/raw/dev_set.txt")
-        get_statuses("input/raw/"+BASENAME2, "input/"+TAG_I+"/"+BASENAME, 0, "input/raw/dev_set.txt")
+#if not os.path.exists(BASEDIR +"/input/"+TAG_I+"/"+BASENAME+"_text.csv"):
+#	print "==>Processing Raw Data"
+#	os.system("mkdir input/"+TAG_I+"/"+BASENAME)
+#	get_statuses("input/raw/"+BASENAME1, "input/"+TAG_I+"/"+BASENAME, 1, "input/raw/dev_set.txt")
+#        get_statuses("input/raw/"+BASENAME2, "input/"+TAG_I+"/"+BASENAME, 0, "input/raw/dev_set.txt")
 
 folder = "twitter"
 dataset = TAG_I
@@ -145,9 +146,9 @@ if args.tw_pp:
         cmd = [JAVA,
                class_to_run,
                "--dataset " + dataset,
-               "--data-folder segan/" + folder,                
+               "--data-folder "+BASEDIR+"/segan/" + folder,                
                #"--text-data "+BASEDIR+"/input/"+TAG_I+"/"+BASENAME+"_text.csv",
-               "--text-data "+BASEDIR+"/input/raw/control_depression/controldepression.users.train.text",
+               "--text-data "+BASEDIR+"/input/raw/control_depression/controldepression.users.train.txt",
                "--format-folder " + tw_in_folder,
                "--run-mode process",
                "-v -d -s -sent",
@@ -162,9 +163,9 @@ if args.tw_pp:
                 cmd.append("--response-file " + BASEDIR + "/input/"+TAG_I+"/"+BASENAME+"_label.csv")
         if args.tw == "bslda" or args.tw=="bsnlda":
                 #cmd.append("--label-file " + BASEDIR + "/input/"+TAG_I+"/"+BASENAME+"_label.csv")
-                cmd.append("--label-file " + BASEDIR + "/input/raw/control_depression/controldepression.users.train.label")
+                cmd.append("--label-file " + BASEDIR + "/input/raw/control_depression/controldepression.users.train.lbl")
         if args.prior:
-                cmd.append("--word-voc-file segan/neuro/neuro-data/"+ne_in_folder+"/neuro-data.wvoc")
+                cmd.append("--word-voc-file " +BASEDIR+ "/segan/neuro/neuro-data/"+ne_in_folder+"/neuro-data.wvoc")
         if args.V:
                 cmd.append("--V 10000")
         log_file.write(" ".join(cmd) + "\n\n")
@@ -180,7 +181,7 @@ elif args.ne == 'slda':
 if args.tw_run:
 	print "==>Infering topics with " + args.tw
         class_to_run = class_map[args.tw]
-        file_prefix = "segan/"+folder+"/"+dataset+"/"+tw_in_folder+"/"+dataset
+        file_prefix = BASEDIR+"/segan/"+folder+"/"+dataset+"/"+tw_in_folder+"/"+dataset
         cmd = [JAVA,
                class_to_run,
                "--dataset " + dataset,
@@ -217,14 +218,14 @@ elif args.tw == 'slda':
 	
 run_cmd("unzip "+TW_DIR+"/report/iter-"+NUM_ITER+".zip")
 
-run_cmd("python code/get_topics.py iter-"+NUM_ITER+".assignment segan/twitter/"+TAG_I+"/"+tw_in_folder+"/"+TAG_I+".docinfo "+out_dir+"/slda-tops_"+NUM_ITER+" SLDA-"+NUM_TOPS+"-"+TAG_O)
+run_cmd("python " + BASEDIR + "/code/get_topics.py iter-"+NUM_ITER+".assignment " + BASEDIR+"/segan/twitter/"+TAG_I+"/"+tw_in_folder+"/"+TAG_I+".docinfo "+out_dir+"/slda-tops_"+NUM_ITER+" SLDA-"+NUM_TOPS+"-"+TAG_O)
 	
-run_cmd("python code/extract_to_csv.py "+out_dir+"/slda-tops_"+NUM_ITER+" "+out_dir + "/slda-tops_"+NUM_ITER+".csv")
+run_cmd("python " + BASEDIR + "/code/extract_to_csv.py "+out_dir+"/slda-tops_"+NUM_ITER+" "+out_dir + "/slda-tops_"+NUM_ITER+".csv")
 
 run_cmd("rm iter-"+NUM_ITER+".*")
 
 
-run_cmd('java -Xmx10000M -cp /usr/share/java/weka.jar weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Remove -R 1" -W weka.classifiers.bayes.NaiveBayes -i -k -t '+out_dir+'/slda-tops_'+NUM_ITER+'.csv >> '+log_file.name)
+run_cmd('java -Xmx10000M -cp '+BASEDIR+'/external/weka-3-6-12/weka.jar weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Remove -R 1" -W weka.classifiers.bayes.NaiveBayes -i -k -t '+out_dir+'/slda-tops_'+NUM_ITER+'.csv >> '+log_file.name)
 #java -Xmx10000M -cp /usr/share/java/weka.jar weka.classifiers.bayes.BayesNet  -i -k -t output/$TAG/$BASENAME-infered.csv -D -Q weka.classifiers.bayes.net.search.local.K2 -- -P 1 -S BAYES -E weka.classifiers.bayes.net.estimate.SimpleEstimator -- -A 0.5
 
 
