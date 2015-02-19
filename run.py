@@ -42,7 +42,7 @@ NUM_TOPS=args.k
 SEED=0
 
 JAVA = "java -Xmx10000M -cp 'dist/segan.jar:lib/*'"
-BASEDIR=".."
+BASEDIR="/home/will/Final"
 os.chdir("segan")
 import datetime
 cur_time = datetime.datetime.now()
@@ -97,10 +97,12 @@ alpha =str(1)
 
 class_map = {'lda':"sampler.unsupervised.LDA", 
              "slda" : "sampler.supervised.regression.SLDA",
+             "bslda" : "sampler.supervised.classification.BinarySLDA",
              "snlda" : "sampler.supervised.regression.SNLDA",
              "bsnlda" : "sampler.supervised.regression.SNLDA"}
 args_map = {'lda':["--K "+NUM_TOPS, "--alpha " + alpha,  "--beta 0.01"]}
 args_map["slda"] = args_map["lda"] + ["--rho 1.0 --sigma 1.0 --mu 0.0 -z --train"]
+args_map["bslda"] = args_map["lda"] + ["--sigma 1.0 --mu 0.0 --train"]
 args_map["snlda"] = ["--Ks " + NUM_TOPS,
                      "--alphas "+alpha+","+alpha,
                      "--betas 0.25,0.1,0.05",
@@ -156,7 +158,7 @@ if args.tw_pp:
                "--bs " + str(args.b * 2),
                "--b " + str(args.b)]
         if args.vocab != "":
-                cmd.append("--word-voc-file " + args.vocab)
+                cmd.append("--word-voc-file " + BASEDIR + "/" + args.vocab)
         if args.l:
                 cmd.append("--l")
         if args.tw == "slda" or args.tw=="snlda":
