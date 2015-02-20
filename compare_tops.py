@@ -23,10 +23,13 @@ def correlate(top1, top2):
     return count
 
 out_file = open(sys.argv[1] + ".labeled", "w")
+score = 0
 for top in my_tops:
     scores = {}
     for label, top2 in andy_tops.items():
         scores[label] = correlate(top, top2)
+    score += max(scores.values())
     out_file.write(str(max(scores.values())) + " " +max(scores, key=scores.get) + " " + " ".join(top) + "\n")
 out_file.close()
+print score
 

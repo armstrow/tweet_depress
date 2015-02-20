@@ -210,13 +210,15 @@ print "==>Converting to CSV"
 os.system("mkdir " + out_dir + "/slda-tops_"+NUM_ITER)
 
 def run_cmd(c):
-        log_file.write(c)
+        log_file.write(c + "\n")
         os.system(c)
 
 if args.tw == 'lda' or args.tw == '':
         TW_DIR=out_dir+"/twitter/"+TAG_I+"/models/RANDOM_LDA_K-"+NUM_TOPS+"_B-"+NUM_BI+"_M-"+NUM_ITER+"_L-25_a-"+alpha+"_b-0.01_opt-false"
 elif args.tw == 'slda':
 	TW_DIR=out_dir+"/twitter/"+TAG_I+"/models/RANDOM_SLDA_K-"+NUM_TOPS+"_B-"+NUM_BI+"_M-"+NUM_ITER+"_L-25_a-"+alpha+"_b-0.01_r-1_m-0_s-1_opt-false"
+elif args.tw == 'bslda':
+        TW_DIR=out_dir+"/twitter/"+TAG_I+"/models/RANDOM_binary-SLDA_B-"+NUM_BI+"_M-"+NUM_ITER+"_L-25_K-"+NUM_TOPS+"_a-"+alpha+"_b-0.01_m-0_s-1_opt-false"
 	
 run_cmd("unzip "+TW_DIR+"/report/iter-"+NUM_ITER+".zip")
 
