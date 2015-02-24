@@ -20,6 +20,7 @@ parser.add_argument('-in_tag', default="dev")
 parser.add_argument('-out_tag', default="")
 parser.add_argument('-model_dir', default="")
 parser.add_argument('--k', default="50", help="number of topics")
+parser.add_argument('--k_2', default="15,4")
 parser.add_argument('--b', help="include bigrams", action='store_const', const=5, default=5000)
 parser.add_argument('--l', action='store_true', help="perform lemmitization")
 parser.add_argument('--ni', default='500', help="number of iterations")
@@ -103,7 +104,7 @@ class_map = {'lda':"sampler.unsupervised.LDA",
 args_map = {'lda':["--K "+NUM_TOPS, "--alpha " + alpha,  "--beta 0.01"]}
 args_map["slda"] = args_map["lda"] + ["--rho 1.0 --sigma 1.0 --mu 0.0 -z --train"]
 args_map["bslda"] = args_map["lda"] + ["--sigma 1.0 --mu 0.0 --train"]
-args_map["snlda"] = ["--Ks " + NUM_TOPS,
+args_map["snlda"] = ["--Ks " + args.k_2,
                      "--alphas "+alpha+","+alpha,
                      "--betas 0.25,0.1,0.05",
                      "--gamma-means 0.2,0.2 --gamma-scales 100,10",
@@ -157,12 +158,13 @@ if args.tw_pp:
                "--u " + str(args.u),
                "--bs " + str(args.b * 2),
                "--b " + str(args.b)]
-        if args.vocab != "":
+        if args.vocab != "" and not args.prior:
                 cmd.append("--word-voc-file " + BASEDIR + "/" + args.vocab)
         if args.l:
                 cmd.append("--l")
         if args.tw == "slda" or args.tw=="snlda":
-                cmd.append("--response-file " + BASEDIR + "/input/"+TAG_I+"/"+BASENAME+"_label.csv")
+                #cmd.append("--response-file " + BASEDIR + "/input/"+TAG_I+"/"+BASENAME+"_label.csv")
+                cmd.append("--response-file " + BASEDIR + "/input/raw/control_depression/controldepression.users.train.lbl")
         if args.tw == "bslda" or args.tw=="bsnlda":
                 #cmd.append("--label-file " + BASEDIR + "/input/"+TAG_I+"/"+BASENAME+"_label.csv")
                 cmd.append("--label-file " + BASEDIR + "/input/raw/control_depression/controldepression.users.train.lbl")
@@ -202,16 +204,41 @@ if args.tw_run:
         log_file.write(" ".join(cmd) + "\n\n")
         os.system(" ".join(cmd))
 
+def run_cmd(c):
+        log_file.write(c + "\n")
+        os.system(c)
 
 if not args.predict:
         exit()
+elif "s"in args.tw:
+        print "==>Making predictions with " + args.tw
+        class_to_run = class_map[args.tw]
+        file_prefix = BASEDIR+"/segan/"+folder+"/"+dataset+"/"+tw_in_folder+"/"+dataset
+        cmd = [JAVA,
+               class_to_run,
+               "--dataset " + dataset,
+               "--word-voc-file "+file_prefix+".wvoc",
+               "--word-file "+file_prefix+".dat",
+               "--info-file "+file_prefix+".docinfo",
+               "--output-folder "+out_dir+"/"+folder+"/"+dataset+"/models",
+               "--prediction-folder pred",
+               "--evaluation-folder eval",
+               "--burnIn "+NUM_BI,
+               "--maxIter "+NUM_ITER,
+               "--sampleLag 25 --report 5 --init random -v -d"
+           ]
+        if args.prior:
+                cmd.append("--prior-topic-file "+NEURO_DIR+"/posterior.csv")
+        cmd += args_map[args.tw]
+        c = " ".join(cmd).replace("train", "test")
+        run_cmd(c)
+        exit()
+
+
 
 print "==>Converting to CSV"
 os.system("mkdir " + out_dir + "/slda-tops_"+NUM_ITER)
 
-def run_cmd(c):
-        log_file.write(c + "\n")
-        os.system(c)
 
 if args.tw == 'lda' or args.tw == '':
         TW_DIR=out_dir+"/twitter/"+TAG_I+"/models/RANDOM_LDA_K-"+NUM_TOPS+"_B-"+NUM_BI+"_M-"+NUM_ITER+"_L-25_a-"+alpha+"_b-0.01_opt-false"
@@ -229,7 +256,7 @@ run_cmd("python " + BASEDIR + "/code/extract_to_csv.py "+out_dir+"/slda-tops_"+N
 run_cmd("rm iter-"+NUM_ITER+".*")
 
 
-run_cmd('java -Xmx10000M -cp '+BASEDIR+'/external/weka-3-6-12/weka.jar weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Remove -R 1" -W weka.classifiers.bayes.NaiveBayes -i -k -t '+out_dir+'/slda-tops_'+NUM_ITER+'.csv >> '+log_file.name)
+run_cmd('java -Xmx10000M -cp '+'/usr/share/java/weka.jar weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Remove -R 1" -W weka.classifiers.bayes.NaiveBayes -i -k -t '+out_dir+'/slda-tops_'+NUM_ITER+'.csv >> '+log_file.name)
 #java -Xmx10000M -cp /usr/share/java/weka.jar weka.classifiers.bayes.BayesNet  -i -k -t output/$TAG/$BASENAME-infered.csv -D -Q weka.classifiers.bayes.net.search.local.K2 -- -P 1 -S BAYES -E weka.classifiers.bayes.net.estimate.SimpleEstimator -- -A 0.5
 
 
