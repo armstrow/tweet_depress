@@ -13,6 +13,17 @@ labels = {}
 for line in label_file:
     vals = line.split("\t")
     labels[vals[0].strip().split(".")[0]] = vals[1].strip()
+label_file.close()
+label_file = open("../input/raw/control_depression/controldepression.users.dev.lbl")
+for line in label_file:
+    vals = line.split("\t")
+    labels[vals[0].strip().split(".")[0]] = vals[1].strip()
+label_file.close()
+label_file = open("../input/raw/control_depression/controldepression.users.test.lbl")
+for line in label_file:
+    vals = line.split("\t")
+    labels[vals[0].strip().split(".")[0]] = vals[1].strip()
+
 
 #control_ids = set([x.split(".")[0] for x in os.listdir(control)])
 #print control_ids
@@ -28,11 +39,11 @@ for fname in os.listdir(mydir):
     for i in range(0, num_tops):
         s += str(d[tail+"_"+str(i)]) + ","
     #if uid in control_ids:
-    if labels[uid] == "0":
-        s += "-"
+    if labels[uid] == "0" or labels[uid] == "0.0":
+        s += "0"
         #elif uid in dep_ids:
-    elif labels[uid] == "1":
-        s += "+"
+    elif labels[uid] == "1" or labels[uid] == "1.0":
+        s += "1"
     else:
         print "user not found"
         continue
