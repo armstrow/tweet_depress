@@ -50,7 +50,7 @@ os.chdir("segan")
 import datetime
 cur_time = datetime.datetime.now()
 if args.model_dir == "":
-        out_dir = BASEDIR + "/output/exp/" + TAG_O + "_" + datetime.datetime.isoformat(cur_time)
+        out_dir = BASEDIR + "/output_scratch/exp/" + TAG_O + "_" + datetime.datetime.isoformat(cur_time)
 else:
         out_dir = BASEDIR + "/" +  args.model_dir
 if not os.path.exists(out_dir):
