@@ -31,6 +31,7 @@ parser.add_argument('--u', help="limit unigrams", action='store_const', const=50
 parser.add_argument('--V', help="limit vocab to 10000", action='store_true')
 parser.add_argument('-vocab', default="")
 parser.add_argument('-neuro', default="input/raw/combined_pp.text.txt")
+parser.add_argument('-in_file', default="input/raw/control_depression/controldepression.users")
 args = parser.parse_args()
 
 
@@ -50,7 +51,7 @@ os.chdir("segan")
 import datetime
 cur_time = datetime.datetime.now()
 if args.model_dir == "":
-        out_dir = BASEDIR + "/output/exp/" + TAG_O + "_" + datetime.datetime.isoformat(cur_time)
+        out_dir = BASEDIR + "/output/" + TAG_O + "_" + datetime.datetime.isoformat(cur_time)
 else:
         out_dir = BASEDIR + "/" +  args.model_dir
 if not os.path.exists(out_dir):
@@ -81,7 +82,7 @@ if args.ne_pp:
                "--bs " + str(args.b * 2),
                "--b " + str(args.b)]
         if args.vocab != "":
-                cmd.append("--word-voc-file " + args.vocab)
+                cmd.append("--word-voc-file " + BASEDIR + "/" + args.vocab)
         if args.l:
                 cmd.append("--l")
         if args.ne == "slda" or args.ne=="snlda":
@@ -153,7 +154,7 @@ if args.tw_pp:
                "--dataset " + dataset,
                "--data-folder "+BASEDIR+"/segan/" + folder,                
                #"--text-data "+BASEDIR+"/input/"+TAG_I+"/"+BASENAME+"_text.csv",
-               "--text-data "+BASEDIR+"/input/raw/control_depression/controldepression.users.train.txt",
+               "--text-data "+BASEDIR+"/"+args.in_file + ".train.txt",
                "--format-folder " + tw_in_folder,
                "--run-mode process",
                "-v -d -s -sent",
@@ -166,10 +167,10 @@ if args.tw_pp:
                 cmd.append("--l")
         if args.tw == "slda" or args.tw=="snlda":
                 #cmd.append("--response-file " + BASEDIR + "/input/"+TAG_I+"/"+BASENAME+"_label.csv")
-                cmd.append("--response-file " + BASEDIR + "/input/raw/control_depression/controldepression.users.train.lbl")
+                cmd.append("--response-file " + BASEDIR + "/"+args.in_file+".train.lbl")
         if args.tw == "bslda" or args.tw=="bsnlda":
                 #cmd.append("--label-file " + BASEDIR + "/input/"+TAG_I+"/"+BASENAME+"_label.csv")
-                cmd.append("--label-file " + BASEDIR + "/input/raw/control_depression/controldepression.users.train.lbl")
+                cmd.append("--label-file " + BASEDIR + "/"+args.in_file+".train.lbl")
         if args.prior:
                 cmd.append("--word-voc-file " +BASEDIR+ "/segan/neuro/neuro-data/"+ne_in_folder+"/neuro-data.wvoc")
         if args.V:
@@ -226,7 +227,7 @@ if "s"in args.tw:
 		       "--dataset test",
 		       "--data-folder "+BASEDIR+"/segan/" + folder,                
 		       #"--text-data "+BASEDIR+"/input/"+TAG_I+"/"+BASENAME+"_text.csv",
-		       "--text-data "+BASEDIR+"/input/raw/control_depression/controldepression.users."+args.pred_set+".txt",
+		       "--text-data "+BASEDIR+"/" +args.in_file +"."+args.pred_set+".txt",
 		       "--format-folder " + tw_in_folder,
 		       "--run-mode process",
 		       "-v -d -s -sent",
@@ -238,10 +239,10 @@ if "s"in args.tw:
 			cmd.append("--l")
 		if args.tw == "slda" or args.tw=="snlda":
                 #cmd.append("--response-file " + BASEDIR + "/input/"+TAG_I+"/"+BASENAME+"_label.csv")
-			cmd.append("--response-file " + BASEDIR + "/input/raw/control_depression/controldepression.users."+args.pred_set+".lbl")
+			cmd.append("--response-file " + BASEDIR + "/" +args.in_file +"."+args.pred_set+".lbl")
 		if args.tw == "bslda" or args.tw=="bsnlda":
                 #cmd.append("--label-file " + BASEDIR + "/input/"+TAG_I+"/"+BASENAME+"_label.csv")
-			cmd.append("--label-file " + BASEDIR + "/input/raw/control_depression/controldepression.users."+args.pred_set+".lbl")
+			cmd.append("--label-file " + BASEDIR + "/" +args.in_file +"."+args.pred_set+".lbl")
 		if args.V:
 			cmd.append("--V 10000")
 		log_file.write(" ".join(cmd) + "\n\n")
