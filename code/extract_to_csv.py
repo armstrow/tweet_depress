@@ -8,18 +8,18 @@ outfile = open(sys.argv[2], "w")
 #dep = "input/raw/depressed"
 #control = "anonymized_control_tweets"
 #dep = "anonymized_depression_tweets"
-label_file = open("../input/raw/control_depression/controldepression.users.train.lbl")
+label_file = open(sys.argv[3] + ".train.lbl")
 labels = {}
 for line in label_file:
     vals = line.split("\t")
     labels[vals[0].strip().split(".")[0]] = vals[1].strip()
 label_file.close()
-label_file = open("../input/raw/control_depression/controldepression.users.dev.lbl")
+label_file = open(sys.argv[3] + "dev.lbl")
 for line in label_file:
     vals = line.split("\t")
     labels[vals[0].strip().split(".")[0]] = vals[1].strip()
 label_file.close()
-label_file = open("../input/raw/control_depression/controldepression.users.test.lbl")
+label_file = open(sys.argv[3] + "test.lbl")
 for line in label_file:
     vals = line.split("\t")
     labels[vals[0].strip().split(".")[0]] = vals[1].strip()

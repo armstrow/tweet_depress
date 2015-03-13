@@ -268,7 +268,7 @@ if "s"in args.tw:
 	if args.tw == 'slda':
 		cmd += ["--prediction-folder pred", "--evaluation-folder eval"]
 	cmd += args_map[args.tw]
-        c = " ".join(cmd).replace("train", "test")
+        c = " ".join(cmd).replace("-train", "-test")
         run_cmd(c)
         #exit()
 
@@ -297,8 +297,8 @@ run_cmd("python " + BASEDIR + "/code/get_topics.py iter-"+NUM_ITER+".assignment 
 
 run_cmd("python " + BASEDIR + "/code/get_topics.py TEST-iter-100.assignment " + BASEDIR+"/segan/twitter/test/"+tw_in_folder+"/test.docinfo "+out_dir+"/slda-tops_TEST_"+NUM_ITER+" SLDA-"+NUM_TOPS+"-"+TAG_O)
 	
-run_cmd("python " + BASEDIR + "/code/extract_to_csv.py "+out_dir+"/slda-tops_"+NUM_ITER+" "+out_dir + "/slda-tops_"+NUM_ITER+".csv")
-run_cmd("python " + BASEDIR + "/code/extract_to_csv.py "+out_dir+"/slda-tops_TEST_"+NUM_ITER+" "+out_dir + "/slda-tops_TEST_"+NUM_ITER+".csv")
+run_cmd("python " + BASEDIR + "/code/extract_to_csv.py "+out_dir+"/slda-tops_"+NUM_ITER+" "+out_dir + "/slda-tops_"+NUM_ITER+".csv "+BASEDIR+"/"+args.in_file + ".train.lbl")
+run_cmd("python " + BASEDIR + "/code/extract_to_csv.py "+out_dir+"/slda-tops_TEST_"+NUM_ITER+" "+out_dir + "/slda-tops_TEST_"+NUM_ITER+".csv "+BASEDIR+"/"+args.in_file + "."+args.pred_set +".lbl")
 
 run_cmd("rm iter-"+NUM_ITER+".*")
 run_cmd("rm TEST-iter-100.*")
