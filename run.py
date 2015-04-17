@@ -86,7 +86,7 @@ if args.ne_pp:
         if args.l:
                 cmd.append("--l")
         if args.ne == "slda" or args.ne=="snlda":
-                cmd.append("--response-file " + BASEDIR + "/input/raw/combined_pp.text.lbl")
+                cmd.append("--response-file " + BASEDIR + "/input/combined_pp.text.lbl")
         if args.prior:
                 cmd.append("--word-voc-file "+BASEDIR+"/big_vocab_2.txt")
         if args.V:
@@ -110,8 +110,8 @@ args_map["bslda"] = args_map["lda"] + ["--sigma 1.0 --mu 0.0 --train"]
 args_map["snlda"] = ["--Ks " + args.k_2,
                      "--alphas "+alpha+","+alpha,
                      "--betas 0.25,0.1,0.05",
-                     "--gamma-means 0.2,0.2 --gamma-scales 100,10",
-                     "--rho 0.1 --mu 0.0 --sigmas 0.5,2.5 -z -train"]
+                     "--pis 0.2,0.2 --gammas 100,10",
+                     "--rho 0.1 --mu 0.0 --sigmas 0.01,0.5,2.5 -z -train"]
 args_map["bsnlda"] = args_map["snlda"] + ["-binary"]
 if args.ne_run:
 	print "==>Training lda on neuroticism data"
@@ -268,7 +268,7 @@ if "s"in args.tw:
 	if args.tw == 'slda':
 		cmd += ["--prediction-folder pred", "--evaluation-folder eval"]
 	cmd += args_map[args.tw]
-        c = " ".join(cmd).replace("-train", "-test")
+        c = " ".join(cmd).replace("-train", "-parallel -test")
         run_cmd(c)
         #exit()
 
