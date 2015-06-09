@@ -35,8 +35,6 @@ parser.add_argument('-in_file', default="input/raw/control_depression/controldep
 args = parser.parse_args()
 
 
-#MALLET="/home/will/Research/CLPsych/external/mallet-2.0.7/bin/mallet"
-#MALLET=external/Mallet/bin/mallet
 BASENAME1=args.pos_file
 BASENAME2=args.neg_file
 TAG_I=args.in_tag
@@ -46,7 +44,7 @@ NUM_TOPS=args.k
 SEED=0
 
 JAVA = "java -Xmx10000M -cp 'dist/segan.jar:lib/*'"
-BASEDIR="/home/will/tweet_depress"
+BASEDIR=os.getcwd()
 os.chdir("segan")
 import datetime
 cur_time = datetime.datetime.now()
@@ -134,16 +132,6 @@ if args.ne_run:
         os.system(" ".join(cmd))
         
 
-#if not os.path.exists(BASEDIR + "/input/" + TAG_I):
-#	os.system("mkdir input/" + TAG_I)
-
-#if not os.path.exists(BASEDIR +"/input/"+TAG_I+"/"+BASENAME+"_text.csv"):
-#	print "==>Processing Raw Data"
-#	os.system("mkdir input/"+TAG_I+"/"+BASENAME)
-#	get_statuses("input/raw/"+BASENAME1, "input/"+TAG_I+"/"+BASENAME, 1, "input/raw/dev_set.txt")
-#        get_statuses("input/raw/"+BASENAME2, "input/"+TAG_I+"/"+BASENAME, 0, "input/raw/dev_set.txt")
-
-folder = "twitter"
 dataset = TAG_I
 tw_in_folder = "format-" + args.tw + ("_" + args.tw_pp_tag if args.tw_pp_tag != "" else "")
 if args.tw_pp:
