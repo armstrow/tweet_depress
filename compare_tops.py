@@ -1,12 +1,19 @@
 import sys
 
-andy = open("andy_tops.txt")
+#andy = open("andy_tops.txt")
+andy = open(sys.argv[2])
 mine = open(sys.argv[1])
 
 andy_tops = {}
+count = 0
 for line in andy:
+    if line[0] != "[":
+        continue
     words = line.split()
-    andy_tops[words[0]] = words[1:]
+    andy_tops[str(count)] = words[3:]
+    count += 1
+#    words = line.split()
+#    andy_tops[words[0]] = words[1:]
 
 my_tops = []
 for line in mine:

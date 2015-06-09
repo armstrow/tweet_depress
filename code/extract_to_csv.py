@@ -8,13 +8,13 @@ outfile = open(sys.argv[2], "w")
 #dep = "input/raw/depressed"
 #control = "anonymized_control_tweets"
 #dep = "anonymized_depression_tweets"
-label_file = open(sys.argv[3] + ".train.lbl")
+label_file = open(sys.argv[3])
 labels = {}
 for line in label_file:
     vals = line.split("\t")
     labels[vals[0].strip().split(".")[0]] = vals[1].strip()
 label_file.close()
-label_file = open(sys.argv[3] + "dev.lbl")
+'''label_file = open(sys.argv[3] + "dev.lbl")
 for line in label_file:
     vals = line.split("\t")
     labels[vals[0].strip().split(".")[0]] = vals[1].strip()
@@ -23,7 +23,7 @@ label_file = open(sys.argv[3] + "test.lbl")
 for line in label_file:
     vals = line.split("\t")
     labels[vals[0].strip().split(".")[0]] = vals[1].strip()
-
+'''
 
 #control_ids = set([x.split(".")[0] for x in os.listdir(control)])
 #print control_ids

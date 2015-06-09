@@ -45,8 +45,8 @@ BASENAME=BASENAME1+"_x_"+BASENAME2
 NUM_TOPS=args.k
 SEED=0
 
-JAVA = "java -Xmx10000M -cp 'dist/segan_new.jar:lib/*'"
-BASEDIR=".."
+JAVA = "java -Xmx10000M -cp 'dist/segan.jar:lib/*'"
+BASEDIR="/home/will/tweet_depress"
 os.chdir("segan")
 import datetime
 cur_time = datetime.datetime.now()
