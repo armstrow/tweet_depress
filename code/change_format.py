@@ -1,3 +1,10 @@
+'''
+Converts a csv file in the format 
+"id<tab>label<tab>text" to two files, 
+a *.txt file in the format "id<tab>text" and
+a *.lbl file in the format "id<tab>label"
+'''
+
 import sys
 
 infile = sys.argv[1]

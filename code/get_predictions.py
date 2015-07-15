@@ -1,3 +1,15 @@
+'''
+Converts a prediction file output by SLDA/SNLDA for aggregated tweets into a csv with a single continuous prediction per author.  
+
+Usage:
+python get_predictions.py <prediction_file> <count_of_tweets_per_aggregation_unit> <output_file>
+
+example:
+python get_predictions.py output/SNLDA_30_4/twitter/train/models/RANDOM_SNLDA_Ks-30-4_B-250_M-1000_L-25_a-1-1_b-0.25-0.1-0.05_p-0.2-0.2_g-100-10_r-0.1_m-0_s-0.01-0.5-2.5_opt-false_bin-false_path-NONE_root-false/te_result/predictions input/DC/DC.clean.main.fold0.dev.count results/snlda.csv
+
+note the aggregation count file has the format "<id>|<tag>\t<count>" where each line is the count of tweets in that aggregation unit, which will serve to weight the prediction for that unit in the overall prediction.
+'''
+
 import sys
 import sys
 import scipy.io
