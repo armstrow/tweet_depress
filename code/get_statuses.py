@@ -1,3 +1,22 @@
+"""
+Extracts text from twitter-scraped files into an easy-to-use csv format.  Does not additional processing of the text, but get_statuses2.py actually tokenizes and does some processing of them.
+
+inputs: 
+path - folder containing raw twitter files, 1 file per user, each containing json dictionaries of tweet information (1 tweet per line)
+label - label to identify the processed file (+, -) or (0, 1), etc.
+set_file (optional) - file listing document ids to be selected for use
+
+outputs:
+out_file - name of the output files. 2 will be produced, one with the labels and one with the text
+
+USAGE:
+python get_statuses.py path out_file label set_file
+
+example:
+python get_statuses.py raw_tweets/ out.csv - dev_set.txt 
+"""
+
+
 from os import listdir
 from os.path import isfile, join
 import sys

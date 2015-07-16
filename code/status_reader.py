@@ -1,3 +1,8 @@
+'''
+Same as get_statuses.py, but adapted for usage in run.py, though it is not currently used in such.
+'''
+
+
 from os import listdir
 from os.path import isfile, join
 import sys

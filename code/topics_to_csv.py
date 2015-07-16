@@ -1,3 +1,10 @@
+'''
+Converts topic files in the format output by code in segan which contains topics listed in the form "<id> <topic_index> <topic_value> <topic_index2> <topic_value2> ...", where topic distribution values are identified by a topic index in the space prior to it.  This assumes a 50-topic run and will produce a file in the format "<id>,<t1>,<t2>,...,<t50>,<label>" where t1 through t50 are the topic distribution values for the topic indexed by the column, and the label is the documents label from the label input file.
+
+Usage: python topics_to_csv.py assignment_file out_file label_file
+'''
+
+
 import sys
 
 

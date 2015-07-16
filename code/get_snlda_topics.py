@@ -1,3 +1,7 @@
+'''
+Simple adapter for changing csv file formats and combing topics with labels
+'''
+
 import sys
 
 infile = open(sys.argv[1])

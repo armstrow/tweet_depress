@@ -1,3 +1,6 @@
+'''
+Same as topics_to_csv.py but assumes a slightly different input file format (tab separated instead of space separated, integer doc ids instead of strings).
+'''
 import sys
 
 

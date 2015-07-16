@@ -1,3 +1,7 @@
+"""
+Adapted from code by Thang Nguyen. Designed to produce input files based on a text corpus.
+"""
+
 import sys
 import scipy.io
 import scipy
