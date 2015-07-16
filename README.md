@@ -8,4 +8,4 @@ This runs lda on the data in input/in_file1.txt then uses that as a prior for sl
 
 By default output is sent to BASE_DIR/output/_[timestamp], but can be further labeled with the -out_tag parameter, or set explicitly with the -model_dir parameter.  Output is in the same format as in https://github.com/vietansegan/segan, with some additional utility files in the root of the output directory.
 
-The code/ directory contains both python scripts used by run.py and a few additional utilities for preprocessing data or extracting results.
+The code/ directory contains both python scripts used by run.py and a few additional utilities for preprocessing data or extracting results. Most simply adapt between formats, the most useful of them being "get_predictions.py" which extracts predictions output by SLDA/SNLDA and re-combines "weekly" documents into a single prediction per author.  Additionally some of the scripts can be used to extract and tokenize documents from raw twitter formats.
