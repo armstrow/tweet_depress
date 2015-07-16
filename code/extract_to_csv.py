@@ -1,3 +1,10 @@
+"""
+Used as an intermediary step in run.py for converting topic assignments to a more usabel csv file.  Takes as input a directory containing 1 json file per document consisting of an object a label for each topic mapped to the count of occurances of that topic in the document and a label file with one row per document in the format "<id>\t<label>".  Output is a file with one row per document in the format "<id>,<c1>,<c2>,...,<label>", where c1 through cn are the counts of topic occurances from the input directory.
+
+Usage:
+python extract_to_csv.py input_dir outfile label_file
+"""
+
 import sys
 import os
 import json
